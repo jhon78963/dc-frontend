@@ -36,9 +36,52 @@ export class AppMenuComponent implements OnInit {
             },
           ],
         },
+        {
+          label: 'Productos',
+          icon: 'pi pi-home',
+          items: [
+            {
+              label: 'Marcas',
+              icon: 'pi pi-fw pi-tags', 
+              routerLink: ['/products/brands'],
+            },
+            {
+              label: 'Categorías',
+              icon: 'pi pi-fw pi-th-large', 
+              routerLink: ['/administration/users'],
+            },
+            {
+              label: 'Productos',
+              icon: 'pi pi-fw pi-box',
+              routerLink: ['/administration/users'],
+            },
+          ],
+        },
       ];
     } else {
-      this.model = [];
+      this.model = [
+        {
+          label: 'Productos',
+          icon: 'pi pi-home',
+          items: [
+            {
+              label: 'Marcas',
+              icon: 'pi pi-fw pi-tags', 
+              routerLink: ['/products/brands'],
+            },
+            {
+              label: 'Categorías',
+              icon: 'pi pi-fw pi-th-large', 
+              routerLink: ['/administration/users'],
+            },
+            {
+              label: 'Productos',
+              icon: 'pi pi-fw pi-box',
+              routerLink: ['/administration/users'],
+            },
+          ],
+        },
+      ];
     }
   }
 }

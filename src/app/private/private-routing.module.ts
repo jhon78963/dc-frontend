@@ -25,6 +25,15 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'products',
+    title: 'Productos',
+    data: { breadcrumb: 'Productos' },
+    loadChildren: () =>
+      import('./products/products.module').then(
+        m => m.ProductsModule,
+      ),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'home',
