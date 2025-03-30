@@ -123,6 +123,7 @@ export class BrandListComponent implements OnInit, OnDestroy {
     page = this.page,
     name = this.name,
   ): Promise<void> {
+ 
     this.updatePage(page);
     this.brandsService.callGetList(limit, page, name).subscribe();
     setTimeout(() => {
@@ -151,11 +152,14 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
     this.brandModal.onClose.subscribe({
       next: value => {
-        value && value?.success
-          ? this.showSuccess('Marca Creada.')
-          : value?.error
-            ? this.showError(value?.error)
-            : null;
+
+        if(value)this.showSuccess('Marca Creada.');
+        
+        // value && value?.success
+        //   ? this.showSuccess('Marca Creada.')
+        //   : value?.error
+        //     ? this.showError(value?.error)
+        //     : null;
       },
     });
   }
@@ -172,11 +176,17 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
     this.brandModal.onClose.subscribe({
       next: value => {
-        value && value?.success
-          ? this.showSuccess('Marca actualizada.')
-          : value?.error
-            ? this.showError(value?.error)
-            : null;
+        
+        if(value.status === 200 && value.message === 'Brand updated.'){
+          this.getBrands(this.limit, this.page, this.name);
+          this.showSuccess('Marca actualizada.');
+        }
+        
+        // value && value?.status === 200
+        //   ?
+        //   : value?.error
+        //     ? this.showError(value?.error)
+        //     : null;
       },
     });
   }

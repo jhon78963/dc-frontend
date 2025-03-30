@@ -1,12 +1,22 @@
-<span class="p-float-label">
-  <input
-    class="float"
-    [placeholder]="placeholder"
-    [type]="type"
-    [id]="id"
-    [readonly]="readonly"
-    pInputText
-    [formControl]="formControl"
-    [name]="controlName" />
-  <label [for]="id">{{ label }}</label>
-</span>
+
+
+
+    <span class="p-float-label">
+      <input
+        class="float"
+        [placeholder]="placeholder"
+        [type]="type"
+        [id]="id"
+        [readonly]="readonly"
+        pInputText
+        [formControl]="formControl"
+        [name]="controlName" />
+      <label [for]="id">{{ label }}</label>
+    </span>
+
+    <small *ngIf="formControl?.errors?.['backend']"
+        class="block text-red-500 text-xs mt-1 w-full break-words error">
+        ⚠️ {{ formControl.errors?.['backend'] }}
+    </small>
+
+ 

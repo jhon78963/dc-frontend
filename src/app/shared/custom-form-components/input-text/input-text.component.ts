@@ -7,13 +7,14 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-input-text',
   templateUrl: './input-text.component.html',
   styleUrl: './input-text.component.scss',
   standalone: true,
-  imports: [InputTextModule, FormsModule, ReactiveFormsModule],
+  imports: [InputTextModule, FormsModule, ReactiveFormsModule, CommonModule],
 })
 export class InputTextComponent implements OnInit {
   @Input() placeholder: string = '';
@@ -39,4 +40,9 @@ export class InputTextComponent implements OnInit {
     this.formGroup = this.formGroupDirective.form;
     this.formControl = this.formGroup.get(this.controlName) as FormControl;
   }
+
+  getErrorMessage(): string | null {
+    return this.formControl?.errors?.['backend'] || null;
+  }
+  
 }

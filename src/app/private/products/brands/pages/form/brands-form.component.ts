@@ -42,20 +42,46 @@ export class BrandsFormComponent implements OnInit {
   }
 
   buttonSaveBrand() {
-    if (this.form) {
-      const brand = new Brand(this.form.value);
-      if (this.dynamicDialogConfig.data.id) {
+    if(!this.form) return;
+
+    const brand = new Brand(this.form.value);
+    if (this.dynamicDialogConfig.data.id) {
         const id = this.dynamicDialogConfig.data.id;
         this.brandsService.edit(id, brand).subscribe({
-          next: () => this.dialogRef.close(),
-          error: () => this.dialogRef.close(),
+          next: (res)   => this.dialogRef.close(res),
+          error: (res)  => {
+            if(res.status === 422){
+              const errors  = res.error.errors;
+              console.log(errors);
+
+              this.handleValidationErrors(errors); 
+            }
+          },
         });
-      } else {
-        this.brandsService.create(brand).subscribe({
-          next: () => this.dialogRef.close(),
-          error: () => this.dialogRef.close(),
-        });
-      }
+    } else {
+     
+      this.brandsService.create(brand).subscribe({
+        next: (res)   => this.dialogRef.close(res),
+        error: (res)  => {
+    
+          if(res.status === 422){
+            const errors  = res.error.errors;
+            console.log(errors);
+            this.handleValidationErrors(errors); 
+          }
+          
+        },
+      });
     }
   }
+
+  handleValidationErrors(errors: any) {
+    Object.keys(errors).forEach((field) => {
+      const control = this.form.get(field);
+      if (control) {
+        control.setErrors({ backend: errors[field][0] }); 
+      }
+    });
+  }
+  
 }

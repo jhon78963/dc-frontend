@@ -8,6 +8,8 @@ import {
 } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
 import { Brand, BrandListResponse } from '../models/brands.model';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+
 
 @Injectable({
   providedIn: 'root',
@@ -50,16 +52,28 @@ export class BrandsService {
     return this.apiService.get(`brands/${id}`);
   }
 
+  /*
   create(data: Brand): Observable<void> {
     return this.apiService
       .post('brands', data)
       .pipe(switchMap(() => this.callGetList()));
   }
+  */
 
+  create(data: Brand): Observable<HttpResponse<any>> {
+    return this.apiService.post<any>(`brands`, data);
+  }
+
+  /*
   edit(id: number, data: Brand): Observable<void> {
     return this.apiService
       .patch(`brands/${id}`, data)
       .pipe(switchMap(() => this.callGetList()));
+  }
+  */
+
+  edit(id: number, data: Brand): Observable<HttpResponse<any>> {
+    return this.apiService.patch<any>(`brands/${id}`, data, { observe: 'response' });
   }
 
   delete(id: number): Observable<void> {

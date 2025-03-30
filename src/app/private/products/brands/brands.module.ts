@@ -12,6 +12,7 @@ import { TreeTableModule } from 'primeng/treetable';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { BrandsFormComponent } from './pages/form/brands-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     TreeTableModule,
     TabMenuModule,
     ProgressSpinnerModule, 
+    HttpClientModule
   ],
   providers: [DialogService],
 })
