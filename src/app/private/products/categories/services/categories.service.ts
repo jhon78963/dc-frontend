@@ -7,19 +7,19 @@ import {
   switchMap
 } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
-import { Brand, BrandListResponse } from '../models/brands.model';
+import { Category, CategoryListResponse } from '../models/categories.model';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Spinner1Service } from '../../../../services/spinner1.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class BrandsService {
-  brands: Brand[] = [];
+export class CategoriesService {
+  categories: Category[] = [];
   total: number = 0;
-  brands$: BehaviorSubject<Brand[]>  = new BehaviorSubject<Brand[]>(this.brands);
+  categories$: BehaviorSubject<Category[]>  = new BehaviorSubject<Category[]>(this.categories);
   total$: BehaviorSubject<number>   = new BehaviorSubject<number>(this.total);
-  spinner1: Spinner1Service;
+  spinner1:Spinner1Service;
 
   constructor(private readonly apiService: ApiService,private spinner1Service: Spinner1Service) {
     this.spinner1 = spinner1Service;
@@ -30,29 +30,29 @@ export class BrandsService {
     page: number = 1,
     name: string = '',
   ): Observable<void> {
-    let url = `brands?limit=${limit}&page=${page}`;
+    let url = `categories?limit=${limit}&page=${page}`;
     if (name) {
       url += `&search=${name}`;
     }
-    return this.apiService.get<BrandListResponse>(url).pipe(
+    return this.apiService.get<CategoryListResponse>(url).pipe(
       debounceTime(600),
-      map((response: BrandListResponse) => {
+      map((response: CategoryListResponse) => {
         this.updateBrands(response.data);
         this.updateTotalBrands(response.paginate.total);
       }),
     );
   }
 
-  getList(): Observable<Brand[]> {
-    return this.brands$.asObservable();
+  getList(): Observable<Category[]> {
+    return this.categories$.asObservable();
   }
 
   getTotal(): Observable<number> {
     return this.total$.asObservable();
   }
 
-  getOne(id: number): Observable<Brand> {
-    return this.apiService.get(`brands/${id}`);
+  getOne(id: number): Observable<Category> {
+    return this.apiService.get(`categories/${id}`);
   }
 
   /*
@@ -63,8 +63,8 @@ export class BrandsService {
   }
   */
 
-  create(data: Brand): Observable<HttpResponse<any>> {
-    return this.apiService.post<any>(`brands`, data);
+  create(data: Category): Observable<HttpResponse<any>> {
+    return this.apiService.post<any>(`categories`, data);
   }
 
   /*
@@ -75,19 +75,19 @@ export class BrandsService {
   }
   */
 
-  edit(id: number, data: Brand): Observable<HttpResponse<any>> {
-    return this.apiService.patch<any>(`brands/${id}`, data, { observe: 'response' });
+  edit(id: number, data: Category): Observable<HttpResponse<any>> {
+    return this.apiService.patch<any>(`categories/${id}`, data, { observe: 'response' });
   }
 
   delete(id: number): Observable<void> {
     return this.apiService
-      .delete(`brands/${id}`)
+      .delete(`categories/${id}`)
       .pipe(switchMap(() => this.callGetList()));
   }
 
-  private updateBrands(value: Brand[]): void {
-    this.brands = value;
-    this.brands$.next(this.brands);
+  private updateBrands(value: Category[]): void {
+    this.categories = value;
+    this.categories$.next(this.categories);
   }
 
   private updateTotalBrands(value: number): void {

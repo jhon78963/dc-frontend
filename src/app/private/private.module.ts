@@ -6,6 +6,6 @@ import { PrivateComponent } from './private.component';
 
 @NgModule({
   declarations: [PrivateComponent],
-  imports: [CommonModule, PrivateRoutingModule],
+  imports: [CommonModule, PrivateRoutingModule ],
 })
 export class PrivateModule {}

@@ -30,6 +30,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { FileUploadModule } from 'primeng/fileupload';
 import { UploadExcelComponent } from './custom-form-components/upload-excel/upload-excel.component';
 import { TabViewComponent } from './custom-form-components/tab-view/tab-view.component';
+import { Spinner1 } from './custom-form-components/spinner-1/spinner-1.component';
 
 const PRIMENG_MODULES = [
   InputTextModule,
@@ -64,6 +65,7 @@ const STANDALONES_COMPONENTS = [
   TablePaginationComponent,
   UploadExcelComponent,
   TabViewComponent,
+  Spinner1
 ];
 
 @NgModule({

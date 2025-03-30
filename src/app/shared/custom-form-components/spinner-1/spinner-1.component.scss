@@ -1,0 +1,92 @@
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  display: inline-block;
+  position: relative;
+  transform: rotate(45deg);
+}
+
+.loader::before {
+  content: '';  
+  box-sizing: border-box;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 0;
+  top: -25px;
+  animation: animloader 2s ease infinite;
+}
+
+.loader::after {
+  content: '';  
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 25px;
+  height: 25px;
+  background: #007BFF; 
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5); 
+  animation: animloader2 1.5s ease infinite;
+}
+
+@keyframes animloader {
+  0% {
+    box-shadow: 0 25px rgba(255, 255, 255, 0), 25px 25px rgba(255, 255, 255, 0), 25px 50px rgba(255, 255, 255, 0), 0px 50px rgba(255, 255, 255, 0);
+  }
+  12% {
+    box-shadow: 0 25px white, 25px 25px rgba(255, 255, 255, 0), 25px 50px rgba(255, 255, 255, 0), 0px 50px rgba(255, 255, 255, 0);
+  }
+  25% {
+    box-shadow: 0 25px white, 25px 25px white, 25px 50px rgba(255, 255, 255, 0), 0px 50px rgba(255, 255, 255, 0);
+  }
+  37% {
+    box-shadow: 0 25px white, 25px 25px white, 25px 50px white, 0px 50px rgba(255, 255, 255, 0);
+  }
+  50% {
+    box-shadow: 0 25px white, 25px 25px white, 25px 50px white, 0px 50px white;
+  }
+  62% {
+    box-shadow: 0 25px rgba(255, 255, 255, 0), 25px 25px white, 25px 50px white, 0px 50px white;
+  }
+  75% {
+    box-shadow: 0 25px rgba(255, 255, 255, 0), 25px 25px rgba(255, 255, 255, 0), 25px 50px white, 0px 50px white;
+  }
+  87% {
+    box-shadow: 0 25px rgba(255, 255, 255, 0), 25px 25px rgba(255, 255, 255, 0), 25px 50px rgba(255, 255, 255, 0), 0px 50px white;
+  }
+  100% {
+    box-shadow: 0 25px rgba(255, 255, 255, 0), 25px 25px rgba(255, 255, 255, 0), 25px 50px rgba(255, 255, 255, 0), 0px 50px rgba(255, 255, 255, 0);
+  }
+}
+
+@keyframes animloader2 {
+  0% {
+    transform: translate(0, 0) rotateX(0) rotateY(0);
+  }
+  25% {
+    transform: translate(100%, 0) rotateX(0) rotateY(180deg);
+  }
+  50% {
+    transform: translate(100%, 100%) rotateX(-180deg) rotateY(180deg);
+  }
+  75% {
+    transform: translate(0, 100%) rotateX(-180deg) rotateY(360deg);
+  }
+  100% {
+    transform: translate(0, 0) rotateX(0) rotateY(360deg);
+  }
+}

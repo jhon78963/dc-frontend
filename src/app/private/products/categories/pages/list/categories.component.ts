@@ -2,38 +2,38 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { debounceTime, Observable, Subject } from 'rxjs';
-import { BrandsService } from '../../services/brands.service';
+import { CategoriesService } from '../../services/categories.service';
 import { LoadingService } from '../../../../../services/loading.service';
 import { SharedModule } from '../../../../../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { BrandsFormComponent } from '../form/brands-form.component';
+import { CategoriesFormComponent } from '../form/categories-form.component';
 import {
   CallToAction,
   Column,
 } from '../../../../../interfaces/table.interface';
-import { Brand } from '../../models/brands.model';
+import { Category } from '../../models/categories.model';
 import { PaginatorState } from 'primeng/paginator';
 
 
 @Component({
   selector: 'app-roles',
-  templateUrl: './brands.component.html',
-  styleUrl: './brands.component.scss',
+  templateUrl: './categories.component.html',
+  styleUrl: './categories.component.scss',
   standalone: true,
   imports: [CommonModule, ConfirmDialogModule, ToastModule, SharedModule],
   providers: [ConfirmationService, MessageService],
 })
-export class BrandListComponent implements OnInit, OnDestroy {
-  brandModal: DynamicDialogRef | undefined;
+export class CategoryListComponent implements OnInit, OnDestroy {
+  categoryModal: DynamicDialogRef | undefined;
   columns: Column[] = [];
   cellToAction: any;
   data: any[] = [];
   limit: number = 10;
   page: number = 1;
   name: string = '';
-  callToAction: CallToAction<Brand>[] = [
+  callToAction: CallToAction<Category>[] = [
     {
       type: 'button',
       size: 'small',
@@ -41,7 +41,7 @@ export class BrandListComponent implements OnInit, OnDestroy {
       outlined: true,
       pTooltip: 'Editar',
       tooltipPosition: 'bottom',
-      click: (rowData: Brand) => this.buttonEditBrand(rowData.id),
+      click: (rowData: Category) => this.buttonEditCategory(rowData.id),
     },
     {
       type: 'button',
@@ -50,8 +50,8 @@ export class BrandListComponent implements OnInit, OnDestroy {
       outlined: true,
       pTooltip: 'Eliminar',
       tooltipPosition: 'bottom',
-      click: (rowData: Brand, event?: Event) =>
-        this.buttonDeleteRole(rowData.id, event!),
+      click: (rowData: Category, event?: Event) =>
+        this.buttonDeleteCategory(rowData.id, event!),
     },
   ];
 
@@ -61,7 +61,7 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly dialogService: DialogService,
-    private readonly brandsService: BrandsService,
+    private readonly categoriesService: CategoriesService,
     public messageService: MessageService,
     private confirmationService: ConfirmationService,
     private loadingService: LoadingService,
@@ -92,16 +92,16 @@ export class BrandListComponent implements OnInit, OnDestroy {
       },
     ];
 
-    this.getBrands(this.limit, this.page, this.name);
+    this.getCategories(this.limit, this.page, this.name);
     this.searchTermSubject.pipe(debounceTime(600)).subscribe(() => {
       this.loadingService.sendLoadingState(true);
-      this.getBrands(this.limit, this.page, this.name);
+      this.getCategories(this.limit, this.page, this.name);
     });
   }
 
   ngOnDestroy(): void {
-    if (this.brandModal) {
-      this.brandModal.close();
+    if (this.categoryModal) {
+      this.categoryModal.close();
     }
   }
 
@@ -118,78 +118,78 @@ export class BrandListComponent implements OnInit, OnDestroy {
     this.searchTermSubject.next(term);
   }
 
-  async getBrands(
+  async getCategories(
     limit = this.limit,
     page = this.page,
     name = this.name,
   ): Promise<void> {
  
-    this.updatePage(page);
-    this.brandsService.callGetList(limit, page, name).subscribe();
+    this.categoriesService.callGetList(limit, page, name).subscribe();
     setTimeout(() => {
       this.loadingService.sendLoadingState(false);
     }, 600);
+
   }
 
-  get brands(): Observable<Brand[]> {
-    return this.brandsService.getList();
+  get categories(): Observable<Category[]> {
+    return this.categoriesService.getList();
   }
 
   get total(): Observable<number> {
-    return this.brandsService.getTotal();
+    return this.categoriesService.getTotal();
   }
 
   async onPageSelected(event: PaginatorState) {
     this.updatePage((event.page ?? 0) + 1);
-    this.getBrands(event.rows, this.page);
+    this.getCategories(event.rows, this.page);
   }
 
-  buttonAddBrand(): void {
-    this.brandModal = this.dialogService.open(BrandsFormComponent, {
+  buttonAddCategory(): void {
+    this.categoryModal = this.dialogService.open(CategoriesFormComponent, {
       data: {},
       header: 'Crear',
     });
 
-    this.brandModal.onClose.subscribe({
-      next: value => {
+    this.categoryModal.onClose.subscribe({
+      next: async value => {
 
-        if(value)this.showSuccess('Marca Creada.');
+        await this.getCategories(this.limit, this.page, this.name);
+        if(value)this.showSuccess('Categoría Creada.');
         
-        // value && value?.success
-        //   ? this.showSuccess('Marca Creada.')
-        //   : value?.error
-        //     ? this.showError(value?.error)
-        //     : null;
       },
     });
   }
 
-  buttonEditBrand(id: number): void {
+  buttonEditCategory(id: number): void {
 
-    this.brandModal = this.dialogService.open(BrandsFormComponent, {
+    this.categoriesService.spinner1.show();
+    
+    this.categoryModal = this.dialogService.open(CategoriesFormComponent, {
       data: {
         id,
       },
       header: 'Editar',
     });
 
-    this.brandModal.onClose.subscribe({
-      next: value => {
+    this.categoryModal.onClose.subscribe({
+      next: async  value => {
         
         if(value.status === 200){
-          this.getBrands(this.limit, this.page, this.name);
-          this.showSuccess('Marca actualizada.');
+          this.getCategories(this.limit, this.page, this.name);
+          this.categoriesService.spinner1.hide();
+          this.showSuccess('Categoría actualizada.');
+          this.categoriesService.spinner1.hide();
         }
         
       },
     });
   }
 
-  buttonDeleteRole(id: number, event: Event) {
+  buttonDeleteCategory(id: number, event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
-      message: 'Deseas eliminar esta Marca?',
-      header: 'Eliminar marca',
+      message: 'Deseas eliminar esta Categoría?',
+      header: 'Eliminar categoría',
       icon: 'pi pi-info-circle',
       acceptButtonStyleClass: 'p-button-danger p-button-text',
       rejectButtonStyleClass: 'p-button-text p-button-text',
@@ -197,17 +197,15 @@ export class BrandListComponent implements OnInit, OnDestroy {
       rejectIcon: 'none',
 
       accept: () => {
-
-        this.brandsService.spinner1.show();
-
-        this.brandsService.delete(id).subscribe(() => {
-          this.brandsService.spinner1.hide();
-          this.showSuccess('La marca ha sido eliminada');
+        this.categoriesService.spinner1.show();
+        this.categoriesService.delete(id).subscribe(() => {
+          this.categoriesService.spinner1.hide();
+          this.showSuccess('La categoría ha sido eliminada');
         });
       },
       reject: () => {
-        this.brandsService.spinner1.hide();
-        this.showError('No se eliminó la marca, intentelo nuevamente');
+        this.categoriesService.spinner1.hide();
+        this.showError('No se eliminó la categoría, intentelo nuevamente');
       },
     });
   }

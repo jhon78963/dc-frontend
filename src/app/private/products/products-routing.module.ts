@@ -9,6 +9,12 @@ const routes: Routes = [
     data: { breadcrumb: 'Marcas' },
     loadChildren: () => import('./brands/brands.module').then(m => m.BrandsModule),
   },
+  {
+    path: 'categories',
+    title: 'Categorías',
+    data: { breadcrumb: 'Categorías' },
+    loadChildren: () => import('./categories/categories.module').then(m => m.CategoriesModule),
+  },
   { path: '', pathMatch: 'full', redirectTo: 'brands' },
 ];
 
