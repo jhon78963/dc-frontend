@@ -1,24 +1,32 @@
 @if (form) {
-
   <div *ngIf="loading" class="loading-container">
     <p-progressSpinner></p-progressSpinner>
   </div>
 
-  <form  *ngIf="!loading && form" [formGroup]="form" (ngSubmit)="buttonSaveBrand()" class="pt-2">
+  <form
+    *ngIf="!loading && form"
+    [formGroup]="form"
+    (ngSubmit)="buttonSaveBrand()"
+    class="pt-2">
     <div class="p-fluid">
       <div class="field mb-3">
-
-          <app-input-text
-            label="Brand"
-            for="brand"
-            type="text"
-            id="brand"
-            placeholder="Ingresa la marca"
-            controlName="name"></app-input-text>
-             
+        <app-input-text
+          label="Brand"
+          for="brand"
+          type="text"
+          id="brand"
+          placeholder="Ingresa la marca"
+          controlName="name"></app-input-text>
+        <div *ngIf="form.get('name')?.errors?.['required']">
+          <span class="text-red-500 text-sm">Este campo es requerido</span>
+        </div>
       </div>
-      <button type="submit" pButton label="Guardar" class="mt-3"></button>
+      <button
+        type="submit"
+        pButton
+        label="Guardar"
+        class="mt-3"
+        [disabled]="!formValid"></button>
     </div>
-
   </form>
 }

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { BrandsService } from '../../services/brands.service';
 import { Brand } from '../../models/brands.model';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-roles-form',
@@ -24,71 +23,70 @@ export class BrandsFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.dynamicDialogConfig.data.id) {
+      this.loading = true;
+      const id = this.dynamicDialogConfig.data.id;
 
-      this.loading  = true;
-      const id      = this.dynamicDialogConfig.data.id;
-      
       this.brandsService.getOne(id).subscribe({
         next: (response: Brand) => {
           this.form.patchValue(response);
           this.loading = false;
         },
-        error: () => {
-        },
-      
+        error: () => {},
       });
-    } else {
     }
   }
 
   buttonSaveBrand() {
-    if(!this.form) return;
+    if (!this.form) return;
 
     this.brandsService.spinner1.show();
 
     const brand = new Brand(this.form.value);
     if (this.dynamicDialogConfig.data.id) {
-        const id = this.dynamicDialogConfig.data.id;
-        this.brandsService.edit(id, brand).subscribe({
-          next: (res)   => {
-            this.dialogRef.close(res);
+      const id = this.dynamicDialogConfig.data.id;
+      this.brandsService.edit(id, brand).subscribe({
+        next: res => {
+          this.dialogRef.close(res);
+          this.brandsService.spinner1.hide();
+        },
+        error: res => {
+          if (res.status === 422) {
+            const errors = res.error.errors;
+            this.handleValidationErrors(errors);
             this.brandsService.spinner1.hide();
-          },
-          error: (res)  => {
-            if(res.status === 422){
-              const errors  = res.error.errors;
-              this.handleValidationErrors(errors); 
-              this.brandsService.spinner1.hide();
-            }
-          },
-        });
+          }
+        },
+      });
 
-        return;
+      return;
     }
-     
+
     this.brandsService.create(brand).subscribe({
-      next: (res)   => {
-        this.dialogRef.close(res);
+      next: (res: any) => {
+        this.dialogRef.close({ message: res.message });
         this.brandsService.spinner1.hide();
       },
-      error: (res)  => {
-        if(res.status === 422){
-          const errors  = res.error.errors;
-          this.handleValidationErrors(errors); 
+      error: (res: any) => {
+        console.log(res);
+        if (res.status === 422) {
+          const errors = res.error.errors;
+          this.handleValidationErrors(errors);
           this.brandsService.spinner1.hide();
-        } 
+        }
       },
     });
-  
   }
 
   handleValidationErrors(errors: any) {
-    Object.keys(errors).forEach((field) => {
+    Object.keys(errors).forEach(field => {
       const control = this.form.get(field);
       if (control) {
-        control.setErrors({ backend: errors[field][0] }); 
+        control.setErrors({ backend: errors[field][0] });
       }
     });
   }
-  
+
+  get formValid() {
+    return this.form.valid;
+  }
 }

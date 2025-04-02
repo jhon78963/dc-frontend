@@ -4,11 +4,11 @@ import {
   debounceTime,
   map,
   Observable,
-  switchMap
+  switchMap,
 } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
 import { Brand, BrandListResponse } from '../models/brands.model';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { Spinner1Service } from '../../../../services/spinner1.service';
 
 @Injectable({
@@ -17,11 +17,14 @@ import { Spinner1Service } from '../../../../services/spinner1.service';
 export class BrandsService {
   brands: Brand[] = [];
   total: number = 0;
-  brands$: BehaviorSubject<Brand[]>  = new BehaviorSubject<Brand[]>(this.brands);
-  total$: BehaviorSubject<number>   = new BehaviorSubject<number>(this.total);
+  brands$: BehaviorSubject<Brand[]> = new BehaviorSubject<Brand[]>(this.brands);
+  total$: BehaviorSubject<number> = new BehaviorSubject<number>(this.total);
   spinner1: Spinner1Service;
 
-  constructor(private readonly apiService: ApiService,private spinner1Service: Spinner1Service) {
+  constructor(
+    private readonly apiService: ApiService,
+    private spinner1Service: Spinner1Service,
+  ) {
     this.spinner1 = spinner1Service;
   }
 
@@ -63,8 +66,10 @@ export class BrandsService {
   }
   */
 
-  create(data: Brand): Observable<HttpResponse<any>> {
-    return this.apiService.post<any>(`brands`, data);
+  create(data: Brand): Observable<void> {
+    return this.apiService
+      .post(`brands`, data)
+      .pipe(switchMap(() => this.callGetList()));
   }
 
   /*
@@ -76,7 +81,9 @@ export class BrandsService {
   */
 
   edit(id: number, data: Brand): Observable<HttpResponse<any>> {
-    return this.apiService.patch<any>(`brands/${id}`, data, { observe: 'response' });
+    return this.apiService.patch<any>(`brands/${id}`, data, {
+      observe: 'response',
+    });
   }
 
   delete(id: number): Observable<void> {

@@ -16,7 +16,6 @@ import {
 import { Brand } from '../../models/brands.model';
 import { PaginatorState } from 'primeng/paginator';
 
-
 @Component({
   selector: 'app-roles',
   templateUrl: './brands.component.html',
@@ -57,7 +56,6 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
   private searchTermSubject = new Subject<string>();
   loading: boolean = true;
-
 
   constructor(
     private readonly dialogService: DialogService,
@@ -123,7 +121,6 @@ export class BrandListComponent implements OnInit, OnDestroy {
     page = this.page,
     name = this.name,
   ): Promise<void> {
- 
     this.updatePage(page);
     this.brandsService.callGetList(limit, page, name).subscribe();
     setTimeout(() => {
@@ -152,20 +149,16 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
     this.brandModal.onClose.subscribe({
       next: value => {
-
-        if(value)this.showSuccess('Marca Creada.');
-        
-        // value && value?.success
-        //   ? this.showSuccess('Marca Creada.')
-        //   : value?.error
-        //     ? this.showError(value?.error)
-        //     : null;
+        value && value?.success
+          ? this.showSuccess(value.message)
+          : value?.error
+            ? this.showError(value?.error)
+            : null;
       },
     });
   }
 
   buttonEditBrand(id: number): void {
-
     this.brandModal = this.dialogService.open(BrandsFormComponent, {
       data: {
         id,
@@ -175,12 +168,10 @@ export class BrandListComponent implements OnInit, OnDestroy {
 
     this.brandModal.onClose.subscribe({
       next: value => {
-        
-        if(value.status === 200){
+        if (value.status === 200) {
           this.getBrands(this.limit, this.page, this.name);
           this.showSuccess('Marca actualizada.');
         }
-        
       },
     });
   }
@@ -197,7 +188,6 @@ export class BrandListComponent implements OnInit, OnDestroy {
       rejectIcon: 'none',
 
       accept: () => {
-
         this.brandsService.spinner1.show();
 
         this.brandsService.delete(id).subscribe(() => {
